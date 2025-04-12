@@ -1,0 +1,20 @@
+[project]
+name = "chupy"
+version = "0.1.0"
+description = "🐣 chupy — toying with python frontend development"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "python-multipart>=0.0.20",
+    "starlette>=0.45.3",
+    "uvicorn>=0.34.0",
+    "websockets>=15.0.1",
+]
+[project.optional-dependencies]
+plotly = [
+  "plotly>=6.0.1",
+]
+[dependency-groups]
+dev = [
+    "watchfiles>=1.0.4",
+]
