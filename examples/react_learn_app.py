@@ -10,6 +10,7 @@ from core import (
     new_state,
     reload,
 )
+from core import handler as h
 
 
 @dataclass
@@ -31,21 +32,13 @@ PRODUCTS = [
 
 @component
 def SearchBar(set_search: StateSetter, set_only_in_stock: StateSetter):
-    @handler
-    def handle_checkbox(_):
-        set_only_in_stock(lambda prev: not prev)
-
-    @handler
-    def handle_search_input(value):
-        set_search(value["search"])
-
     return html.div(
         [
             html.input(
                 type="text",
                 placeholder="Search...",
                 name="search",
-                x_handler=handle_search_input,
+                x_handler=h(lambda value: set_search(value["search"]))
             ),
             html.div(
                 [
@@ -54,7 +47,7 @@ def SearchBar(set_search: StateSetter, set_only_in_stock: StateSetter):
                         id="toto",
                         name="only_stock",
                         checked=True,
-                        x_handler=handle_checkbox,
+                        x_handler=h(lambda _: set_only_in_stock(lambda prev: not prev)),
                     ),
                     html.label("Only show products in stock", for_="toto"),
                 ]
@@ -65,7 +58,7 @@ def SearchBar(set_search: StateSetter, set_only_in_stock: StateSetter):
 
 @component
 def ProductTable(product_filter: StateValue, only_in_stock: StateValue):
-    
+
     @reload(on=[product_filter, only_in_stock])
     def layout():
         body = []
