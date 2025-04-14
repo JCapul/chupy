@@ -39,35 +39,33 @@ def SearchBar(set_search: StateSetter, set_only_in_stock: StateSetter):
     def handle_search_input(value):
         set_search(value["search"])
 
-    def layout():
-        return html.div(
-            [
-                html.input(
-                    type="text",
-                    placeholder="Search...",
-                    name="search",
-                    x_handler=handle_search_input,
-                ),
-                html.div(
-                    [
-                        html.input(
-                            type="checkbox",
-                            id="toto",
-                            name="only_stock",
-                            checked=True,
-                            x_handler=handle_checkbox,
-                        ),
-                        html.label("Only show products in stock", for_="toto"),
-                    ]
-                ),
-            ]
-        )
-
-    return layout
+    return html.div(
+        [
+            html.input(
+                type="text",
+                placeholder="Search...",
+                name="search",
+                x_handler=handle_search_input,
+            ),
+            html.div(
+                [
+                    html.input(
+                        type="checkbox",
+                        id="toto",
+                        name="only_stock",
+                        checked=True,
+                        x_handler=handle_checkbox,
+                    ),
+                    html.label("Only show products in stock", for_="toto"),
+                ]
+            ),
+        ]
+    )
 
 
 @component
 def ProductTable(product_filter: StateValue, only_in_stock: StateValue):
+    
     @reload(on=[product_filter, only_in_stock])
     def layout():
         body = []
@@ -97,18 +95,14 @@ def ProductTable(product_filter: StateValue, only_in_stock: StateValue):
 
 @component
 def FilterableProductTable():
-    search, set_search = new_state("search")
-    only_in_stock, set_only_in_stock = new_state("only_in_stock")
-
-    def layout():
-        return html.div(
-            [
-                SearchBar(set_search, set_only_in_stock),
-                ProductTable(search, only_in_stock),
-            ]
-        )
-
-    return layout
+    search, set_search = new_state()
+    only_in_stock, set_only_in_stock = new_state()
+    return html.div(
+        [
+            SearchBar(set_search, set_only_in_stock),
+            ProductTable(search, only_in_stock),
+        ]
+    )
 
 
 server = Server(FilterableProductTable)

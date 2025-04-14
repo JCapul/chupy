@@ -18,19 +18,16 @@ def TitleInput(set_title: StateSetter):
     def handle_title_input(value):
         set_title(value["title"])
 
-    def layout():
-        return html.div(
-            [
-                html.input(
-                    type="text",
-                    placeholder="Type a title",
-                    name="title",
-                    x_handler=handle_title_input,
-                ),
-            ]
-        )
-
-    return layout
+    return html.div(
+        [
+            html.input(
+                type="text",
+                placeholder="Type a title",
+                name="title",
+                x_handler=handle_title_input,
+            ),
+        ]
+    )
 
 
 @component
@@ -48,12 +45,8 @@ def PlotlyFigureExample(title: StateValue):
 
 @component
 def MyPlotlyApp():
-    title, set_title = new_state("title")
-
-    def layout():
-        return html.div([TitleInput(set_title), PlotlyFigureExample(title)])
-
-    return layout
+    title, set_title = new_state()
+    return html.div([TitleInput(set_title), PlotlyFigureExample(title)])
 
 
 server = Server(MyPlotlyApp)

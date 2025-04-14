@@ -9,11 +9,11 @@ logger = logging.getLogger(__name__)
 
 
 class _Component:
-    def __init__(self, name, layout_fn):
+    def __init__(self, name, layout):
         self._name = name
-        self._layout_fn = layout_fn
-        if hasattr(layout_fn, "__dependencies__"):
-            for state_val in layout_fn.__dependencies__:
+        self._layout_fn = layout if callable(layout) else lambda: layout
+        if hasattr(layout, "__dependencies__"):
+            for state_val in layout.__dependencies__:
                 state_val.add_observer(self.should_reload)
         self._tree = None
         # TODO: add equivalent of strict mode that checks layout function is somewhat pure
