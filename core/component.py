@@ -4,6 +4,8 @@ from functools import wraps, cached_property
 
 from core.context import ctx
 from core.state import StateValue
+from core.html import html, HTMLTag
+
 
 logger = logging.getLogger(__name__)
 
@@ -22,9 +24,13 @@ class _Component:
         self.reload_layout()
 
     def reload_layout(self):
-        self._tree = self._layout_fn()
-        #TODO: is the tree first component always a HTMLTag object ? or can it also be a _Component ? 
-        # but what's the purpose of having a component which layout returns another component...
+        layout = self._layout_fn()
+        if layout is None or layout == "":
+            layout = html.span()
+        if not isinstance(layout, HTMLTag):
+            #TODO: improve error handling
+            raise Exception("layout should be a HTMLTag object")
+        self._tree = layout
         if not self._tree.attrs.get("id"):
             # assign to the root element the component lazily-generated Id if none given by the user
             self._tree.attrs["id"] = self._id
